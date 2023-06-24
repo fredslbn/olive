@@ -1,0 +1,23 @@
+version: 2.1
+jobs:
+  compile:
+   docker:
+      - image: kernelci/build-base:latest
+   steps:
+      - run:
+          command: |
+            apt update && apt upgrade -y
+            export DEBIAN_FRONTEND=noninteractive
+            apt install tzdata -y
+            dpkg-reconfigure --frontend noninteractive tzdata
+            apt install p7zip-full curl python2 ssh-client patch libtinfo5 -yq
+            apt install -f -y git
+            ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime && date
+            git clone --depth=1 https://github.com/missgoin/olive.git -b main builder_kernel
+            cd builder_kernel
+            bash .circleci/olive.sh
+workflows:
+  version: 2.1
+  cooking:
+    jobs:
+      - compile
