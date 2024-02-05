@@ -20,7 +20,7 @@ DEVICE=cherry-mi439
 DEFCONFIG=${DEVICE}_defconfig
 
 # Select LTO variant ( Full LTO by default )
-DISABLE_LTO=0
+DISABLE_LTO=1
 THIN_LTO=0
 
 # Files
@@ -58,32 +58,7 @@ LINKER=ld.lld
 # Clone ToolChain
 function cloneTC() {
 
-	if [ $COMPILER = "atomx" ];
-	then
-	git clone --depth=1 https://gitlab.com/ElectroPerf/atom-x-clang.git clang
-	PATH="${KERNEL_DIR}/clang/bin:$PATH"
-
-    elif [ $COMPILER = "neutron" ];
-    then
-    git clone --depth=1 https://gitlab.com/dakkshesh07/neutron-clang.git clang
-    PATH="${KERNEL_DIR}/clang/bin:$PATH"
-    
-    elif [ $COMPILER = "trb" ];
-    then
-    git clone --depth=1 https://gitlab.com/varunhardgamer/trb_clang.git clang
-    PATH="${KERNEL_DIR}/clang/bin:$PATH"
-    
-    elif [ $COMPILER = "gf" ];
-    then
-    git clone --depth=1 https://github.com/greenforce-project/clang-llvm.git -b main clang
-    PATH="${KERNEL_DIR}/clang/bin:$PATH"
-    
-    elif [ $COMPILER = "cosmic" ];
-    then
-    git clone --depth=1 https://gitlab.com/PixelOS-Devices/playgroundtc.git -b 17 cosmic
-    PATH="${KERNEL_DIR}/cosmic/bin:$PATH"
-    
-    elif [ $COMPILER = "cosmic-clang" ];
+    if [ $COMPILER = "cosmic-clang" ];
     then
     git clone --depth=1 https://gitlab.com/GhostMaster69-dev/cosmic-clang.git -b master cosmic-clang
     PATH="${KERNEL_DIR}/cosmic-clang/bin:$PATH"
@@ -93,90 +68,6 @@ function cloneTC() {
 	git clone --depth=1 https://gitlab.com/Panchajanya1999/azure-clang clang
 	PATH="${KERNEL_DIR}/clang/bin:$PATH"
 
-	elif [ $COMPILER = "proton" ];
-	then
-	git clone --depth=1 https://github.com/kdrag0n/proton-clang.git clang
-	PATH="${KERNEL_DIR}/clang/bin:$PATH"
-	
-	elif [ $COMPILER = "sdclang" ];
-	then
-    git clone --depth=1 https://github.com/ZyCromerZ/SDClang.git --single-branch --branch="14" sdclang
-	git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git --single-branch --branch="lineage-19.0" gcc
-	git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git --single-branch --branch="lineage-19.0" gcc32
-	PATH="${KERNEL_DIR}/sdclang/bin:${KERNEL_DIR}/gcc/bin:${KERNEL_DIR}/gcc32/bin:${PATH}"
-	
-	elif [ $COMPILER = "clang14" ];
-	then
-	#git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/ -b android10-gsi --depth 1 --no-tags --single-branch clang_all
-    wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r450784e.tar.gz && mkdir clang && tar -xzvf clang-r450784e.tar.gz -C clang/
-    #mv clang_all/clang-r353983c clang
-    #rm -rf clang_all
-    export KERNEL_CLANG_PATH="${KERNEL_DIR}/clang"
-    export KERNEL_CLANG="clang"
-    export PATH="$KERNEL_CLANG_PATH/bin:$PATH"
-    CLANG_VERSION=$(clang --version | grep version | sed "s|clang version ||")
-	
-    wget https://releases.linaro.org/components/toolchain/binaries/latest-5/aarch64-linux-gnu/gcc-linaro-5.5.0-2017.10-x86_64_aarch64-linux-gnu.tar.xz && tar -xf gcc-linaro-5.5.0-2017.10-x86_64_aarch64-linux-gnu.tar.xz
-    mv gcc-linaro-5.5.0-2017.10-x86_64_aarch64-linux-gnu gcc64
-    export KERNEL_CCOMPILE64_PATH="${KERNEL_DIR}/gcc64"
-    export KERNEL_CCOMPILE64="aarch64-linux-gnu-"
-    export PATH="$KERNEL_CCOMPILE64_PATH/bin:$PATH"
-    GCC_VERSION=$(aarch64-linux-gnu-gcc --version | grep "(GCC)" | sed 's|.*) ||')
-   
-    wget https://releases.linaro.org/components/toolchain/binaries/latest-5/arm-linux-gnueabihf/gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabihf.tar.xz && tar -xf gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabihf.tar.xz
-    mv gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabihf gcc32
-    export KERNEL_CCOMPILE32_PATH="${KERNEL_DIR}/gcc32"
-    export KERNEL_CCOMPILE32="arm-linux-gnueabihf-"
-    export PATH="$KERNEL_CCOMPILE32_PATH/bin:$PATH"
-    
-    elif [ $COMPILER = "clang14-7" ];
-	then
-	#git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/ -b android10-gsi --depth 1 --no-tags --single-branch clang_all
-    wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r450784e.tar.gz && mkdir clang && tar -xzvf clang-r450784e.tar.gz -C clang/
-    #mv clang_all/clang-r353983c clang
-    #rm -rf clang_all
-    export KERNEL_CLANG_PATH="${KERNEL_DIR}/clang"
-    export KERNEL_CLANG="clang"
-    export PATH="$KERNEL_CLANG_PATH/bin:$PATH"
-    CLANG_VERSION=$(clang --version | grep version | sed "s|clang version ||")
-	
-    wget https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/aarch64-linux-gnu/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz && tar -xf gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz
-    mv gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu gcc64
-    export KERNEL_CCOMPILE64_PATH="${KERNEL_DIR}/gcc64"
-    export KERNEL_CCOMPILE64="aarch64-linux-gnu-"
-    export PATH="$KERNEL_CCOMPILE64_PATH/bin:$PATH"
-    GCC_VERSION=$(aarch64-linux-gnu-gcc --version | grep "(GCC)" | sed 's|.*) ||')
-   
-    wget https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-linux-gnueabihf/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz && tar -xf gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz
-    mv gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf gcc32
-    export KERNEL_CCOMPILE32_PATH="${KERNEL_DIR}/gcc32"
-    export KERNEL_CCOMPILE32="arm-linux-gnueabihf-"
-    export PATH="$KERNEL_CCOMPILE32_PATH/bin:$PATH"
-  
-    elif [ $COMPILER = "clang15" ];
-	then
-	#git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/ -b android10-gsi --depth 1 --no-tags --single-branch clang_all
-    wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/914f9e5ae603f1a290c92160e3958c251184d3f0/clang-r458507.tar.gz && mkdir clang && tar -xzvf clang-r458507.tar.gz -C clang/
-    #mv clang_all/clang-r353983c clang
-    #rm -rf clang_all
-    export KERNEL_CLANG_PATH="${KERNEL_DIR}/clang"
-    export KERNEL_CLANG="clang"
-    export PATH="$KERNEL_CLANG_PATH/bin:$PATH"
-    CLANG_VERSION=$(clang --version | grep version | sed "s|clang version ||")
-	
-    wget https://releases.linaro.org/components/toolchain/binaries/latest-5/aarch64-linux-gnu/gcc-linaro-5.5.0-2017.10-x86_64_aarch64-linux-gnu.tar.xz && tar -xf gcc-linaro-5.5.0-2017.10-x86_64_aarch64-linux-gnu.tar.xz
-    mv gcc-linaro-5.5.0-2017.10-x86_64_aarch64-linux-gnu gcc64
-    export KERNEL_CCOMPILE64_PATH="${KERNEL_DIR}/gcc64"
-    export KERNEL_CCOMPILE64="aarch64-linux-gnu-"
-    export PATH="$KERNEL_CCOMPILE64_PATH/bin:$PATH"
-    GCC_VERSION=$(aarch64-linux-gnu-gcc --version | grep "(GCC)" | sed 's|.*) ||')
-   
-    wget https://releases.linaro.org/components/toolchain/binaries/latest-5/arm-linux-gnueabihf/gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabihf.tar.xz && tar -xf gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabihf.tar.xz
-    mv gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabihf gcc32
-    export KERNEL_CCOMPILE32_PATH="${KERNEL_DIR}/gcc32"
-    export KERNEL_CCOMPILE32="arm-linux-gnueabihf-"
-    export PATH="$KERNEL_CCOMPILE32_PATH/bin:$PATH"
-    
     elif [ $COMPILER = "clang15-7" ];
 	then
 	# git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/ -b android10-gsi --depth 1 --no-tags --single-branch clang_all
@@ -201,74 +92,6 @@ function cloneTC() {
     export KERNEL_CCOMPILE32="arm-linux-gnueabihf-"
     export PATH="$KERNEL_CCOMPILE32_PATH/bin:$PATH"
     
-    
-    elif [ $COMPILER = "clang17" ];
-	then
-	#git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/ -b android10-gsi --depth 1 --no-tags --single-branch clang_all	
-    wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r498229.tar.gz && mkdir clang && tar -xzvf clang-r498229.tar.gz -C clang/
-    #mv clang_all/clang-r353983c clang
-    #rm -rf clang_all
-    export KERNEL_CLANG_PATH="${KERNEL_DIR}/clang"
-    export KERNEL_CLANG="clang"
-    export PATH="$KERNEL_CLANG_PATH/bin:$PATH"
-    CLANG_VERSION=$(clang --version | grep version | sed "s|clang version ||")
-	
-    wget https://releases.linaro.org/components/toolchain/binaries/latest-5/aarch64-linux-gnu/gcc-linaro-5.5.0-2017.10-x86_64_aarch64-linux-gnu.tar.xz && tar -xf gcc-linaro-5.5.0-2017.10-x86_64_aarch64-linux-gnu.tar.xz
-    mv gcc-linaro-5.5.0-2017.10-x86_64_aarch64-linux-gnu gcc64
-    export KERNEL_CCOMPILE64_PATH="${KERNEL_DIR}/gcc64"
-    export KERNEL_CCOMPILE64="aarch64-linux-gnu-"
-    export PATH="$KERNEL_CCOMPILE64_PATH/bin:$PATH"
-    GCC_VERSION=$(aarch64-linux-gnu-gcc --version | grep "(GCC)" | sed 's|.*) ||')
-   
-    wget https://releases.linaro.org/components/toolchain/binaries/latest-5/arm-linux-gnueabihf/gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabihf.tar.xz && tar -xf gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabihf.tar.xz
-    mv gcc-linaro-5.5.0-2017.10-x86_64_arm-linux-gnueabihf gcc32
-    export KERNEL_CCOMPILE32_PATH="${KERNEL_DIR}/gcc32"
-    export KERNEL_CCOMPILE32="arm-linux-gnueabihf-"
-    export PATH="$KERNEL_CCOMPILE32_PATH/bin:$PATH"
-    
-    
-    elif [ $COMPILER = "clang17-7" ];
-	then
-	#git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/ -b android10-gsi --depth 1 --no-tags --single-branch clang_all	
-    wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r498229.tar.gz && mkdir clang && tar -xzvf clang-r498229.tar.gz -C clang/
-    #mv clang_all/clang-r353983c clang
-    #rm -rf clang_all
-    export KERNEL_CLANG_PATH="${KERNEL_DIR}/clang"
-    export KERNEL_CLANG="clang"
-    export PATH="$KERNEL_CLANG_PATH/bin:$PATH"
-    CLANG_VERSION=$(clang --version | grep version | sed "s|clang version ||")
-	
-    wget https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/aarch64-linux-gnu/gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz && tar -xf gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu.tar.xz
-    mv gcc-linaro-7.5.0-2019.12-x86_64_aarch64-linux-gnu gcc64
-    export KERNEL_CCOMPILE64_PATH="${KERNEL_DIR}/gcc64"
-    export KERNEL_CCOMPILE64="aarch64-linux-gnu-"
-    export PATH="$KERNEL_CCOMPILE64_PATH/bin:$PATH"
-    GCC_VERSION=$(aarch64-linux-gnu-gcc --version | grep "(GCC)" | sed 's|.*) ||')
-   
-    wget https://releases.linaro.org/components/toolchain/binaries/7.5-2019.12/arm-linux-gnueabihf/gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz && tar -xf gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf.tar.xz
-    mv gcc-linaro-7.5.0-2019.12-x86_64_arm-linux-gnueabihf gcc32
-    export KERNEL_CCOMPILE32_PATH="${KERNEL_DIR}/gcc32"
-    export KERNEL_CCOMPILE32="arm-linux-gnueabihf-"
-    export PATH="$KERNEL_CCOMPILE32_PATH/bin:$PATH"
-	
-	
-	elif [ $COMPILER = "eva" ];
-	then
-	git clone --depth=1 https://github.com/mvaisakh/gcc-arm64.git -b gcc-new gcc64
-	git clone --depth=1 https://github.com/mvaisakh/gcc-arm.git -b gcc-new gcc32
-	PATH=$KERNEL_DIR/gcc64/bin/:$KERNEL_DIR/gcc32/bin/:/usr/bin:$PATH
-
-	elif [ $COMPILER = "aosp" ];
-	then
-        mkdir aosp-clang
-        cd aosp-clang || exit
-	wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/ab73cd180863dbd17fdb8f20e39b33ab38030cf9/clang-r450784b.tar.gz
-        tar -xf clang*
-        cd .. || exit
-	git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git --depth=1 gcc
-	git clone https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git  --depth=1 gcc32
-	PATH="${KERNEL_DIR}/aosp-clang/bin:${KERNEL_DIR}/gcc/bin:${KERNEL_DIR}/gcc32/bin:${PATH}"
-	
 	fi
 	
 	
@@ -372,34 +195,8 @@ START=$(date +"%s")
            CROSS_COMPILE_ARM32=arm-linux-gnueabi \
            #CLANG_TRIPLE=aarch64-linux-gnu- \
            #LD=${LINKER} \
-           #LLVM=1 \
-           #LLVM_IAS=1 \
-           AR=llvm-ar \
-           #AS=llvm-as \
-           NM=llvm-nm \
-           OBJCOPY=llvm-objcopy \
-           OBJDUMP=llvm-objdump \
-           STRIP=llvm-strip \
-           #READELF=llvm-readelf \
-	       #OBJSIZE=llvm-size \
 	       V=$VERBOSE 2>&1 | tee error.log
 	       
-	elif [ -d ${KERNEL_DIR}/cosmic ];
-	   then
-	       make -j$(nproc --all) O=out \
-	       ARCH=arm64 \
-	       CC=clang \
-           CROSS_COMPILE=aarch64-linux-gnu- \
-           CROSS_COMPILE_ARM32=arm-linux-gnueabi \
-           LLVM=1 \
-           LLVM_IAS=1 \
-           #AR=llvm-ar \
-           #NM=llvm-nm \
-           #LD=${LINKER} \
-           #OBJCOPY=llvm-objcopy \
-           #OBJDUMP=llvm-objdump \
-           #STRIP=llvm-strip \
-	       V=$VERBOSE 2>&1 | tee error.log
 	elif [ -d ${KERNEL_DIR}/cosmic-clang ];
 	   then
 	       make -kj$(nproc --all) O=out \
@@ -416,58 +213,7 @@ START=$(date +"%s")
 	       OBJDUMP=llvm-objdump \
 	       STRIP=llvm-strip \
 	       V=$VERBOSE 2>&1 | tee error.log
-	elif [ -d ${KERNEL_DIR}/gcc64 ];
-	   then
-	       make -kj$(nproc --all) O=out \
-	       ARCH=arm64 \
-	       CROSS_COMPILE_ARM32=arm-eabi- \
-	       CROSS_COMPILE=aarch64-elf- \
-	       LD=aarch64-elf-${LINKER} \
-	       AR=llvm-ar \
-	       NM=llvm-nm \
-	       OBJCOPY=llvm-objcopy \
-	       OBJDUMP=llvm-objdump \
-	       STRIP=llvm-strip \
-	       OBJSIZE=llvm-size \
-	       V=$VERBOSE 2>&1 | tee error.log
-	elif [ -d ${KERNEL_DIR}/sdclang ];
-       then
-           make -kj$(nproc --all) O=out \
-	       ARCH=arm64 \
-	       CC=clang \
-           #HOSTCC=clang \
-	       #HOSTCXX=clang++ \
-	       CLANG_TRIPLE=aarch64-linux-gnu- \
-	       CROSS_COMPILE=aarch64-linux-android- \
-	       CROSS_COMPILE_ARM32=arm-linux-androideabi- \
-	       #LD=${LINKER} \
-	       #AR=llvm-ar \
-	       #NM=llvm-nm \
-	       #OBJCOPY=llvm-objcopy \
-	       #OBJDUMP=llvm-objdump \
-           #STRIP=llvm-strip \
-	       #READELF=llvm-readelf \
-	       #OBJSIZE=llvm-size \
-	       V=$VERBOSE 2>&1 | tee error.log
-    elif [ -d ${KERNEL_DIR}/aosp-clang ];
-       then
-           make -kj$(nproc --all) O=out \
-	       ARCH=arm64 \
-	       CC=clang \
-           #HOSTCC=clang \
-	       #HOSTCXX=clang++ \
-	       CLANG_TRIPLE=aarch64-linux-gnu- \
-	       CROSS_COMPILE=aarch64-linux-android- \
-	       CROSS_COMPILE_ARM32=arm-linux-androideabi- \
-	       #LD=${LINKER} \
-	       #AR=llvm-ar \
-	       #NM=llvm-nm \
-	       #OBJCOPY=llvm-objcopy \
-	       #OBJDUMP=llvm-objdump \
-           #STRIP=llvm-strip \
-	       #READELF=llvm-readelf \
-	       #OBJSIZE=llvm-size \
-	       V=$VERBOSE 2>&1 | tee error.log
+
 	fi
 	
 	echo "**** Verify Image.gz-dtb & dtbo.img ****"
