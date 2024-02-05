@@ -42,8 +42,6 @@ TANGGAL=$(date +"%F%S")
 
 # Specify Final Zip Name
 ZIPNAME="SUPER.KERNEL-OLIVE-$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M").zip"
-FINAL_ZIP=${ZIPNAME}-${DEVICE}-${DATE}.zip
-FINAL_ZIP_ALIAS=Karenuloliv-${DATE}.zip
 
 ##----------------------------------------------------------##
 # Specify compiler.
@@ -181,10 +179,10 @@ function cloneTC() {
     
     elif [ $COMPILER = "clang15-7" ];
 	then
-	#git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/ -b android10-gsi --depth 1 --no-tags --single-branch clang_all
+	# git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/ -b android10-gsi --depth 1 --no-tags --single-branch clang_all
     wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/914f9e5ae603f1a290c92160e3958c251184d3f0/clang-r458507.tar.gz && mkdir clang && tar -xzvf clang-r458507.tar.gz -C clang/
-    #mv clang_all/clang-r353983c clang
-    #rm -rf clang_all
+    # mv clang_all/clang-r353983c clang
+    # rm -rf clang_all
     export KERNEL_CLANG_PATH="${KERNEL_DIR}/clang"
     export KERNEL_CLANG="clang"
     export PATH="$KERNEL_CLANG_PATH/bin:$PATH"
@@ -275,7 +273,7 @@ function cloneTC() {
 	
 	
     # Clone AnyKernel
-    #git clone --depth=1 https://github.com/missgoin/AnyKernel3.git
+    # git clone --depth=1 https://github.com/missgoin/AnyKernel3.git
 
 	}
 
@@ -304,11 +302,7 @@ function exports() {
                export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/cosmic-clang/bin/clang --version | head -n 1 | sed -e 's/  */ /g' -e 's/[[:space:]]*$//' -e 's/^.*clang/clang/')
                export LD_LIBRARY_PATH="${KERNEL_DIR}/cosmic-clang/lib:$LD_LIBRARY_PATH"
                
-        ##elif [ -d ${KERNEL_DIR}/sdclang ];
-           #then
-               #export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/sdclang/bin/clang --version | head -n 1 | sed -e 's/  */ /g' -e 's/[[:space:]]*$//' -e 's/^.*clang/clang/')
-               #export LD_LIBRARY_PATH="${KERNEL_DIR}/sdclang/lib:$LD_LIBRARY_PATH"
-               
+        
         elif [ -d ${KERNEL_DIR}/aosp-clang ];
             then
                export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/aosp-clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
@@ -319,7 +313,7 @@ function exports() {
         export SUBARCH=arm64
         
         # Export Local Version
-        #export LOCALVERSION="-${VERSION}"
+        # export LOCALVERSION="-${VERSION}"
         
         # KBUILD HOST and USER
         export KBUILD_BUILD_HOST=Pancali
@@ -329,8 +323,8 @@ function exports() {
 	    export DISTRO=$(source /etc/os-release && echo "${NAME}")
 	    
 	    # Server caching for speed up compile
-	    #export LC_ALL=C && export USE_CCACHE=1
-	    #ccache -M 100G
+	    # export LC_ALL=C && export USE_CCACHE=1
+	    # ccache -M 100G
 	
 	}
         
@@ -487,15 +481,15 @@ function zipping() {
 	# Copy Files To AnyKernel3 Zip
 	cp $IMAGE AnyKernel3
 	cp $DTBO AnyKernel3
-	#find $DTB -name "*.dtb" -exec cat {} + > AnyKernel3/dtb
+	# find $DTB -name "*.dtb" -exec cat {} + > AnyKernel3/dtb
 	
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
         zip -r9 ${ZIPNAME} *
         MD5CHECK=$(md5sum "$ZIPNAME" | cut -d' ' -f1)
         echo "Zip: $ZIPNAME"
-        #curl -T $ZIPNAME temp.sh; echo
-        #curl -T $ZIPNAME https://oshi.at; echo
+        # curl -T $ZIPNAME temp.sh; echo
+        # curl -T $ZIPNAME https://oshi.at; echo
         curl --upload-file $ZIPNAME https://free.keep.sh
     cd ..
 }
