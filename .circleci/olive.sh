@@ -46,7 +46,7 @@ ZIPNAME="SUPER.KERNEL-OLIVE-$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M").zip"
 ##----------------------------------------------------------##
 # Specify compiler.
 
-COMPILER=clang15-7
+COMPILER=azure
 
 ##----------------------------------------------------------##
 # Specify Linker
@@ -283,16 +283,16 @@ function cloneTC() {
 function exports() {
 	
         # Export KBUILD_COMPILER_STRING
-#        if [ -d ${KERNEL_DIR}/clang ];
-#           then
-#               export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
-#               export LD_LIBRARY_PATH="${KERNEL_DIR}/clang/lib:$LD_LIBRARY_PATH"
+        if [ -d ${KERNEL_DIR}/clang ];
+           then
+               export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
+               export LD_LIBRARY_PATH="${KERNEL_DIR}/clang/lib:$LD_LIBRARY_PATH"
                
-#        elif [ -d ${KERNEL_DIR}/gcc64 ];
-#           then
-#               export KBUILD_COMPILER_STRING=$("$KERNEL_DIR/gcc64"/bin/aarch64-elf-gcc --version | head -n 1)       
+        elif [ -d ${KERNEL_DIR}/gcc64 ];
+           then
+               export KBUILD_COMPILER_STRING=$("$KERNEL_DIR/gcc64"/bin/aarch64-elf-gcc --version | head -n 1)       
        
-         if [ -d ${KERNEL_DIR}/cosmic ];
+         elif [ -d ${KERNEL_DIR}/cosmic ];
            then
                export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/cosmic/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
                export LD_LIBRARY_PATH="${KERNEL_DIR}/cosmic/lib:$LD_LIBRARY_PATH"
@@ -367,19 +367,19 @@ START=$(date +"%s")
 	   then
 	       make -kj$(nproc --all) O=out \
 	       ARCH=arm64 \
-	       CC=$KERNEL_CLANG \
-           CROSS_COMPILE=$KERNEL_CCOMPILE64 \
-           CROSS_COMPILE_ARM32=$KERNEL_CCOMPILE32 \
-           CLANG_TRIPLE=aarch64-linux-gnu- \
+	       CC=clang \
+           CROSS_COMPILE=aarch64-linux-gnu- \
+           CROSS_COMPILE_ARM32=arm-linux-gnueabi \
+           #CLANG_TRIPLE=aarch64-linux-gnu- \
            #LD=${LINKER} \
            #LLVM=1 \
            #LLVM_IAS=1 \
-           #AR=llvm-ar \
+           AR=llvm-ar \
            #AS=llvm-as \
-           #NM=llvm-nm \
-           #OBJCOPY=llvm-objcopy \
-           #OBJDUMP=llvm-objdump \
-           #STRIP=llvm-strip \
+           NM=llvm-nm \
+           OBJCOPY=llvm-objcopy \
+           OBJDUMP=llvm-objdump \
+           STRIP=llvm-strip \
            #READELF=llvm-readelf \
 	       #OBJSIZE=llvm-size \
 	       V=$VERBOSE 2>&1 | tee error.log
