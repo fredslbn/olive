@@ -89,10 +89,6 @@ function cloneTC() {
     export PATH="$KERNEL_CCOMPILE32_PATH/bin:$PATH"
     
 	fi
-	
-	
-    # Clone AnyKernel
-    # git clone --depth=1 https://github.com/missgoin/AnyKernel3.git
 
 	}
 
@@ -139,19 +135,9 @@ function exports() {
         export KBUILD_BUILD_USER="unknown"
         
 	    export PROCS=$(nproc --all)
-	    export DISTRO=$(source /etc/os-release && echo "${NAME}")
-	    
-	    # Server caching for speed up compile
-	    # export LC_ALL=C && export USE_CCACHE=1
-	    # ccache -M 100G
+	    export DISTRO=$(source /etc/os-release && echo "${NAME}") 
 	
 	}
-        
-##----------------------------------------------------------------##
-# Telegram Bot Integration
-##----------------------------------------------------------------##
-
-
 
 ##----------------------------------------------------------##
 # Compilation
@@ -168,8 +154,6 @@ START=$(date +"%s")
 	       CC=clang \
            CROSS_COMPILE=aarch64-linux-gnu- \
            CROSS_COMPILE_ARM32=arm-linux-gnueabi \
-           #CLANG_TRIPLE=aarch64-linux-gnu- \
-           #LD=${LINKER} \
 	       V=$VERBOSE 2>&1 | tee error.log
 	       
 	elif [ -d ${KERNEL_DIR}/cosmic-clang ];
