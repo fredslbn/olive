@@ -9,7 +9,7 @@ jobs:
             apt update && apt upgrade -y
             apt install -f -y git
             ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime && date
-            git clone --depth=1 https://github.com/fredslbn/olive2.git -b main builder_kernel
+            git clone --depth=1 https://github.com/fredslbn/olive.git -b main builder_kernel
             cd builder_kernel
             bash .circleci/olive.sh
 workflows:
