@@ -12,4 +12,4 @@ task:
     - apt update && apt upgrade -y
             
   Build_script:
-      - bash azure.sh
+      - bash clanglinaro.sh
