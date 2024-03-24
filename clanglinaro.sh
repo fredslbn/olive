@@ -8,6 +8,8 @@
 # Specify Kernel Directory
 KERNEL_DIR="$(pwd)"
 
+git submodule update --init --recursive --remote
+
 ##----------------------------------------------------------##
 # Device Name and Model
 MODEL=Xiaomi
